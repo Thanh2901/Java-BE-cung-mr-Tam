@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.java_intern.cruddemo.mapper.UserMapper">
+    <resultMap id="userResultMap" type="com.java_intern.cruddemo.entity.User">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="created_at" column="created_at"/>
+        <result property="updated_at" column="updated_at"/>
+    </resultMap>
+
+    <select id="getUserById" resultType="com.java_intern.cruddemo.dto.UserDto" parameterType="Long">
+        SELECT * FROM tn_user WHERE id = #{id};
+    </select>
+
+    <select id="getAllUsers" resultType="com.java_intern.cruddemo.dto.UserDto">
+        SELECT * FROM tn_user;
+    </select>
+
+    <select id="addUser" parameterType="com.java_intern.cruddemo.entity.User" resultType="com.java_intern.cruddemo.dto.UserDto">
+        INSERT INTO tn_user (id, email, username, password)
+        VALUES (#{id}, #{email}, #{username}, #{password});
+
+        SELECT *
+        FROM tn_user
+        WHERE id = #{id};
+    </select>
+
+    <select id="updateUser" resultType="com.java_intern.cruddemo.dto.UserDto">
+        UPDATE public.tn_user
+        SET email=#{email}, username= #{username}, "password"= #{password} , created_at=now(), updated_at=now()
+        WHERE id= #{id};
+
+        SELECT *
+        FROM tn_user
+        WHERE id = #{id};
+    </select>
+
+    <select id="deleteUser" resultType="com.java_intern.cruddemo.dto.UserDto">
+        DELETE FROM tn_user WHERE id = #{id}
+    </select>
+
+</mapper>
