@@ -16,7 +16,12 @@
     </select>
 
     <select id="getAllUsers" resultType="com.java_intern.cruddemo.dto.UserDto">
-        SELECT * FROM tn_user;
+        SELECT * FROM tn_user
+        LIMIT #{getPaging.pageSize} OFFSET #{getPaging.offset};
+    </select>
+
+    <select id="countUsers" resultType="long">
+        SELECT COUNT(*) FROM tn_user;
     </select>
 
     <select id="addUser" parameterType="com.java_intern.cruddemo.entity.User" resultType="com.java_intern.cruddemo.dto.UserDto">
@@ -40,6 +45,13 @@
 
     <select id="deleteUser" resultType="com.java_intern.cruddemo.dto.UserDto">
         DELETE FROM tn_user WHERE id = #{id}
+    </select>
+
+    <select id="selectEmployees" parameterType="map" resultType="com.java_intern.cruddemo.dto.UserDto">
+        SELECT *
+        FROM employees
+        ORDER BY employee_id
+        LIMIT #{pageSize} OFFSET #{offset};
     </select>
 
 </mapper>

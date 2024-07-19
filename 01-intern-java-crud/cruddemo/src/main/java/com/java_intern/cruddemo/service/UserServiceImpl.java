@@ -1,6 +1,8 @@
 package com.java_intern.cruddemo.service;
 
+import com.java_intern.cruddemo.dto.PagingDto;
 import com.java_intern.cruddemo.dto.UserDto;
+import com.java_intern.cruddemo.entity.Paging;
 import com.java_intern.cruddemo.entity.User;
 import com.java_intern.cruddemo.exception.GlobalExceptionHandling;
 import com.java_intern.cruddemo.mapper.UserMapper;
@@ -27,9 +29,22 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserDto> getAll() {
-        List<UserDto> userDtos = userMapper.getAllUsers();
-        return userDtos;
+    public PagingDto<UserDto> getAll(Paging paging) {
+        int offset = (paging.getCurrentPage() - 1) * paging.getPageSize();
+        paging.setOffset(offset);
+
+        List<UserDto> userDtos = userMapper.getAllUsers(paging);
+        long total = userMapper.countUsers();
+
+        paging.setData(userDtos);
+        paging.setTotal(total);
+
+        PagingDto pagingDto = new PagingDto();
+        pagingDto.setCurrentPage(paging.getCurrentPage());
+        pagingDto.setPageSize(paging.getPageSize());
+        pagingDto.setTotal(paging.getTotal());
+        pagingDto.setData(paging.getData());
+        return pagingDto;
     }
 
     @Override
