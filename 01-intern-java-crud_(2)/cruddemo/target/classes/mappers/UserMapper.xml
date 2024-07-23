@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.java_intern.cruddemo.mapper.UserMapper">
+    <resultMap id="userResultMap" type="com.java_intern.cruddemo.entity.User">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="createdAt" column="created_at" javaType="java.sql.Timestamp"/>
+        <result property="updatedAt" column="updated_at" javaType="java.sql.Timestamp"/>
+    </resultMap>
+
+    <select id="getUserById" resultType="com.java_intern.cruddemo.entity.User">
+        SELECT * FROM tn_user WHERE id = #{id};
+    </select>
+
+    <select id="getAllUsers">
+        SELECT * FROM tn_user
+        LIMIT #{getPaging.pageSize} OFFSET #{getPaging.offset};
+    </select>
+
+    <select id="countUsers" resultType="long">
+        SELECT COUNT(*) FROM tn_user;
+    </select>
+
+    <select id="addUser" parameterType="com.java_intern.cruddemo.dto.request.UserRequest"
+            resultType="com.java_intern.cruddemo.entity.User">
+        INSERT INTO tn_user (email, username, password, created_at, updated_at)
+        VALUES (#{email}, #{username}, #{password}, #{createdAt}, #{updatedAt});
+
+        SELECT *
+        FROM tn_user
+        WHERE id = #{id};
+    </select>
+
+    <select id="updateUser" resultType="com.java_intern.cruddemo.entity.User">
+        UPDATE tn_user
+        SET email=#{request.email}, username=#{request.username}, password=#{request.password}, created_at=#{request.createdAt}, updated_at=#{request.updatedAt}
+        WHERE id=#{id};
+
+        SELECT *
+        FROM tn_user
+        WHERE id = #{id};
+    </select>
+
+    <select id="deleteUser" parameterType="Long">
+        DELETE FROM tn_user WHERE id = #{id};
+    </select>
+
+    <select id="existsByUsername" resultType="boolean">
+        SELECT
+            CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+            FROM tn_user
+            WHERE username = #{username}
+    </select>
+
+    <select id="existsPassword" resultType="boolean">
+        SELECT
+        CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM tn_user
+        WHERE password = #{password}
+    </select>
+</mapper>
